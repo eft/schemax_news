@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Code for the schemax_message feature.
+ */
+include_once 'schemax_message.features.inc';
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ *
+ * where FORM_ID is schemax_message_node_form
+ *
+ */
+function schemax_message_form_schemax_message_node_form_alter(&$form, &$form_state, $form_id) {
+
+  $node = $form_state['node'];
+
+  // Check if this is a new node
+  if (!isset($node->nid) || isset($node->is_new)) {
+    // This is a new node.
+    // Get a list of all contact information (e.g. email) associated with persons on the team
+    $team_persons = _schemax_message_get_team_persons(24);
+
+    $header = array(
+      'name' => t('Player Name'),
+    );
+
+    $form['table_team_persons'] = array(
+      '#type' => 'tableselect',
+      '#header' => $header,
+      '#options' => $team_persons,
+    );
+
+  }
+  else {
+    // This is not a new node.
+  }
+
+  // Prepend a callback to preview action callbacks.
+  array_unshift($form['actions']['submit']['#submit'], 'schemax_message_message_form_submit_handler');
+
+}
+
+/*
+ * Retrieves the id and name of each person on a team
+ *
+ */
+function _schemax_message_get_team_persons($team_id = 24) {
+
+  $bundle = 'schemax_person';
+
+  // Construct select statement that retrieves the node id and the name
+  // of every person on the team
+  $select = 'SELECT DISTINCT ';
+  $select .= 'n.nid, ';
+  $select .= "CONCAT_WS(' ',last.field_schemax_last_name_value, first.field_schemax_first_name_value) name ";
+  $select .= 'FROM {node} n ';
+  $select .= 'INNER JOIN {og_membership} ogm ON n.nid = ogm.etid ';
+  $select .= 'INNER JOIN {field_data_field_schemax_first_name} first ON n.nid = first.entity_id ';
+  $select .= 'INNER JOIN {field_data_field_schemax_last_name} last ON n.nid = last.entity_id ';
+  $select .= 'WHERE ';
+  $select .= 'ogm.gid = :gid ';
+  $select .= 'AND n.type = :bundle';
+
+  // Run query
+  $result = db_query($select, array(':gid' => $team_id, ':bundle' => $bundle));
+
+  // Fetch ids and names in an array
+  $team_persons = $result->fetchAllAssoc('nid',PDO::FETCH_ASSOC);
+
+  return $team_persons;
+}
+
+function schemax_message_message_form_submit_handler($form, $form_state){
+
+    $results = array_filter($form_state['values']['table_team_persons']);
+
+
+
+
+}
