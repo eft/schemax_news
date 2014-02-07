@@ -1,8 +1,8 @@
 name = Schemax Message
 description = Handles the creation and delivery of messages.
 core = 7.x
-project = schemax_message
 package = Schemax
+project = schemax_message
 dependencies[] = ctools
 dependencies[] = features
 dependencies[] = node
