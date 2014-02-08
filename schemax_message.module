@@ -16,36 +16,40 @@ function schemax_message_form_schemax_message_node_form_alter(&$form, &$form_sta
 
   $node = $form_state['node'];
 
-  // Check if this is a new node
-  if (!isset($node->nid) || isset($node->is_new)) {
-    // This is a new node.
-    // Get a list of all contact information (e.g. email) associated with persons on the team
-    $team_persons = _schemax_message_get_team_persons(24);
+  // Get team_id passed to the form via the URL
+  $team_id = $form_state['entityreference_prepopulate']['node']['schemax_message']['og_group_ref'][0];
 
-    $header = array(
-      'name' => t('Player Name'),
-    );
+  if (!empty($team_id)) {
+    // Check if this is a new node
+    if (!isset($node->nid) || isset($node->is_new)) {
+      // This is a new node.
+      // Get a list of all contact information (e.g. email) associated with persons on the team
+      $team_persons = _schemax_message_get_team_persons($team_id);
 
-    $form['table_team_persons'] = array(
-      '#type' => 'tableselect',
-      '#header' => $header,
-      '#options' => $team_persons,
-    );
+      $header = array(
+        'name' => t('Player Name'),
+      );
 
+      $form['table_team_persons'] = array(
+        '#type' => 'tableselect',
+        '#header' => $header,
+        '#options' => $team_persons,
+      );
+    }
+    else {
+      // This is not a new node.
+    }
+
+    // Prepend a callback to preview action callbacks.
+    array_unshift($form['actions']['submit']['#submit'], 'schemax_message_message_form_submit_handler');
   }
-  else {
-    // This is not a new node.
-  }
-
-  // Prepend a callback to preview action callbacks.
-  array_unshift($form['actions']['submit']['#submit'], 'schemax_message_message_form_submit_handler');
-
 }
 
 /*
  * Retrieves the id and name of each person on a team
  *
  */
+
 function _schemax_message_get_team_persons($team_id = 24) {
 
   $bundle = 'schemax_person';
@@ -67,16 +71,15 @@ function _schemax_message_get_team_persons($team_id = 24) {
   $result = db_query($select, array(':gid' => $team_id, ':bundle' => $bundle));
 
   // Fetch ids and names in an array
-  $team_persons = $result->fetchAllAssoc('nid',PDO::FETCH_ASSOC);
+  $team_persons = $result->fetchAllAssoc('nid', PDO::FETCH_ASSOC);
 
   return $team_persons;
 }
 
-function schemax_message_message_form_submit_handler($form, $form_state){
+function schemax_message_message_form_submit_handler($form, $form_state) {
 
-    $results = array_filter($form_state['values']['table_team_persons']);
+  // Get array of persons checked by user on message form.
+  $recipients = array_filter($form_state['values']['table_team_persons']);
 
-
-
-
+  // email the message to recipients
 }

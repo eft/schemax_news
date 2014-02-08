@@ -105,7 +105,7 @@ function schemax_message_field_default_field_instances() {
           'status' => TRUE,
         ),
         'prepopulate' => array(
-          'action' => 'none',
+          'action' => 'hide',
           'action_on_edit' => 0,
           'fallback' => 'none',
           'og_context' => 0,
