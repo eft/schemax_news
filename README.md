@@ -1,4 +1,4 @@
-schemax_message
+schemax_news
 ===============
 
-Handles the creation and delivery of messages
+Handles the administration of news and announcements

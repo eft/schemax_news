@@ -1,18 +1,18 @@
 <?php
 /**
  * @file
- * schemax_message.features.field_instance.inc
+ * schemax_news.features.field_instance.inc
  */
 
 /**
  * Implements hook_field_default_field_instances().
  */
-function schemax_message_field_default_field_instances() {
+function schemax_news_field_default_field_instances() {
   $field_instances = array();
 
-  // Exported field_instance: 'node-schemax_message-body'
-  $field_instances['node-schemax_message-body'] = array(
-    'bundle' => 'schemax_message',
+  // Exported field_instance: 'node-schemax_news-body'
+  $field_instances['node-schemax_news-body'] = array(
+    'bundle' => 'schemax_news',
     'default_value' => NULL,
     'deleted' => 0,
     'description' => '',
@@ -60,9 +60,9 @@ function schemax_message_field_default_field_instances() {
     ),
   );
 
-  // Exported field_instance: 'node-schemax_message-og_group_ref'
-  $field_instances['node-schemax_message-og_group_ref'] = array(
-    'bundle' => 'schemax_message',
+  // Exported field_instance: 'node-schemax_news-og_group_ref'
+  $field_instances['node-schemax_news-og_group_ref'] = array(
+    'bundle' => 'schemax_news',
     'default_value' => NULL,
     'default_value_function' => 'entityreference_prepopulate_field_default_value',
     'deleted' => 0,

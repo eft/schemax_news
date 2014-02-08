@@ -2,29 +2,29 @@
 
 /**
  * @file
- * Code for the schemax_message feature.
+ * Code for the schemax_news feature.
  */
-include_once 'schemax_message.features.inc';
+include_once 'schemax_news.features.inc';
 
 /**
  * Implements hook_form_FORM_ID_alter().
  *
- * where FORM_ID is schemax_message_node_form
+ * where FORM_ID is schemax_news_node_form
  *
  */
-function schemax_message_form_schemax_message_node_form_alter(&$form, &$form_state, $form_id) {
+function schemax_news_form_schemax_news_node_form_alter(&$form, &$form_state, $form_id) {
 
   $node = $form_state['node'];
 
   // Get team_id passed to the form via the URL
-  $team_id = $form_state['entityreference_prepopulate']['node']['schemax_message']['og_group_ref'][0];
+  $team_id = $form_state['entityreference_prepopulate']['node']['schemax_news']['og_group_ref'][0];
 
   if (!empty($team_id)) {
     // Check if this is a new node
     if (!isset($node->nid) || isset($node->is_new)) {
       // This is a new node.
       // Get a list of all contact information (e.g. email) associated with persons on the team
-      $team_persons = _schemax_message_get_team_persons($team_id);
+      $team_persons = _schemax_news_get_team_persons($team_id);
 
       $header = array(
         'name' => t('Player Name'),
@@ -41,7 +41,7 @@ function schemax_message_form_schemax_message_node_form_alter(&$form, &$form_sta
     }
 
     // Prepend a callback to preview action callbacks.
-    array_unshift($form['actions']['submit']['#submit'], 'schemax_message_message_form_submit_handler');
+    array_unshift($form['actions']['submit']['#submit'], 'schemax_news_news_form_submit_handler');
   }
 }
 
@@ -50,7 +50,7 @@ function schemax_message_form_schemax_message_node_form_alter(&$form, &$form_sta
  *
  */
 
-function _schemax_message_get_team_persons($team_id = 24) {
+function _schemax_news_get_team_persons($team_id = 24) {
 
   $bundle = 'schemax_person';
 
@@ -76,10 +76,10 @@ function _schemax_message_get_team_persons($team_id = 24) {
   return $team_persons;
 }
 
-function schemax_message_message_form_submit_handler($form, $form_state) {
+function schemax_news_news_form_submit_handler($form, $form_state) {
 
-  // Get array of persons checked by user on message form.
+  // Get array of persons checked by user on news form.
   $recipients = array_filter($form_state['values']['table_team_persons']);
 
-  // email the message to recipients
+  // email the news to recipients
 }
