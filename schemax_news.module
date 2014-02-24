@@ -63,9 +63,6 @@ function schemax_news_form_schemax_news_node_form_alter(&$form, &$form_state, $f
         '#header' => $header,
         '#options' => $options,
       );
-
-      // Prepend a callback to submit action callbacks.
-      array_unshift($form['actions']['submit']['#submit'], 'schemax_news_news_form_submit_handler');
     }
     else {
       // This is not a new node.
@@ -108,24 +105,9 @@ function _schemax_news_get_team_persons($team_id) {
   return $team_persons;
 }
 
-function schemax_news_news_form_submit_handler($form, $form_state) {
-
-  // Get array of persons checked by user on news form.
-  $checked_recipients = array_filter($form_state['values']['table_team_persons']);
-
-  // Get the recipient keys (node ids).
-  $recipient_keys = array_keys($checked_recipients);
-
-  // Load the person nodes corresponding to the recipient keys.
-  $recipients = entity_load('node', $recipient_keys);
-
-  //
-}
-
 /*
  * Implements hook_node_insert().
  */
-
 function schemax_news_node_insert($node) {
 
   list(,, $bundle) = entity_extract_ids('node', $node);
@@ -171,7 +153,6 @@ function schemax_news_node_insert($node) {
   $wrapper->save();
 
   if (!empty($node->table_team_persons)) {
-
 
   // Get array of persons checked by user on news form.
   $checked_recipients = array_filter($node->table_team_persons);
