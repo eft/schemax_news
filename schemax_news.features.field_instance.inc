@@ -25,10 +25,13 @@ function schemax_news_field_default_field_instances() {
         'weight' => 1,
       ),
       'featured_content' => array(
-        'label' => 'above',
-        'settings' => array(),
-        'type' => 'hidden',
-        'weight' => 0,
+        'label' => 'hidden',
+        'module' => 'text',
+        'settings' => array(
+          'trim_length' => 300,
+        ),
+        'type' => 'text_summary_or_trimmed',
+        'weight' => 1,
       ),
       'teaser' => array(
         'label' => 'hidden',
@@ -76,7 +79,7 @@ function schemax_news_field_default_field_instances() {
         'weight' => 0,
       ),
       'featured_content' => array(
-        'label' => 'above',
+        'label' => 'hidden',
         'settings' => array(),
         'type' => 'hidden',
         'weight' => 0,
